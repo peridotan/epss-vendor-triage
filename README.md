@@ -96,7 +96,18 @@ pip install -r requirements.txt
 
 ## Usage
 
-# 1) Fetch KEV + EPSS data
+### CLI Help
+
+Both tools provide built-in help when required arguments are missing.
+
+```bash
+python kev_epss_tool.py
+python vendor_from_epss_csv.py
+```
+
+---
+
+## 1) Fetch KEV + EPSS data
 
 Retrieve KEV and EPSS, merge by CVE, and export enriched results.
 
@@ -200,6 +211,8 @@ Useful for:
 ## 2) Vendor ranking
 
 Analyze vendors by EPSS score threshold.
+
+The vendor analysis tool also shows built-in help when no input CSV is provided.
 
 ```bash
 python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9
