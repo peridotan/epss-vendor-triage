@@ -158,14 +158,64 @@ def write_xlsx(rows, output_path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Fetch CISA KEV and EPSS data, then export enriched vulnerability data."
+        description="Fetch CISA KEV and EPSS data, then export enriched vulnerability data.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog="""
+Examples:
+  python kev_epss_tool.py --xlsx
+  python kev_epss_tool.py --epss-threshold 0.7 --xlsx
+  python kev_epss_tool.py --percentile-threshold 0.99 --xlsx
+  python kev_epss_tool.py --epss-threshold 0.7 --percentile-threshold 0.99 --xlsx
+  python kev_epss_tool.py -o output/kev_epss_result.csv --xlsx
+
+Typical workflow:
+  1. Fetch KEV + EPSS:
+     python kev_epss_tool.py --xlsx
+
+  2. Analyze vendors:
+     python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9
+"""
     )
 
-    parser.add_argument("--epss-threshold", type=float, default=0.0)
-    parser.add_argument("--percentile-threshold", type=float, default=0.0)
-    parser.add_argument("--output", "-o", default="kev_epss_result.csv")
-    parser.add_argument("--xlsx", action="store_true")
-    parser.add_argument("--timeout", type=int, default=30)
+    parser.add_argument(
+        "--epss-threshold",
+        type=float,
+        default=0.0,
+        help="Minimum EPSS score threshold. Example: 0.7"
+    )
+
+    parser.add_argument(
+        "--percentile-threshold",
+        type=float,
+        default=0.0,
+        help="Minimum EPSS percentile threshold. Example: 0.99"
+    )
+
+    parser.add_argument(
+        "--output",
+        "-o",
+        default="kev_epss_result.csv",
+        help="Output CSV file path. Default: kev_epss_result.csv"
+    )
+
+    parser.add_argument(
+        "--xlsx",
+        action="store_true",
+        help="Also export XLSX file."
+    )
+
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=30,
+        help="HTTP request timeout in seconds. Default: 30"
+    )
+
+    # Show help when no arguments are provided
+    import sys
+    if len(sys.argv) == 1:
+        parser.print_help()
+        return
 
     args = parser.parse_args()
 
