@@ -20,6 +20,21 @@ Useful for:
 
 ---
 
+## Why this tool?
+
+CVSS indicates **severity**, but not likelihood of exploitation.  
+EPSS helps estimate **exploit probability**.  
+KEV identifies vulnerabilities **known to be actively exploited in the wild**.
+
+This tool combines those signals to support:
+
+- Risk-based vulnerability prioritization
+- Vendor-centric exposure review
+- Threat-informed remediation planning
+- Practical CTEM workflows
+
+---
+
 ## Features
 
 ### 1. KEV + EPSS Enrichment
@@ -98,7 +113,7 @@ pip install -r requirements.txt
 
 ### CLI Help
 
-Both tools provide built-in help when required arguments are missing.
+Both tools provide built-in help.
 
 ```bash
 python kev_epss_tool.py
@@ -212,8 +227,6 @@ Useful for:
 
 Analyze vendors by EPSS score threshold.
 
-The vendor analysis tool also shows built-in help when no input CSV is provided.
-
 ```bash
 python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9
 ```
@@ -279,6 +292,16 @@ python vendor_from_epss_csv.py \
 
 ---
 
+## Practical Use Cases
+
+- CTEM-driven vulnerability prioritization
+- Vendor exposure analysis
+- Threat-informed patch review
+- Risk-based remediation planning
+- Security operations reporting
+
+---
+
 ## Defensive Security Use Only
 
 This tool is intended for:
@@ -296,6 +319,17 @@ It does **not** perform:
 - Penetration testing
 - Unauthorized access
 - Offensive operations
+
+---
+
+## Roadmap
+
+Potential future enhancements:
+
+- Top N vendor filtering
+- CVSS integration
+- Historical diff comparison
+- Risk scoring enhancements
 
 ---
 
