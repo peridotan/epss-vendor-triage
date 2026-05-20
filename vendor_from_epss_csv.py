@@ -153,19 +153,35 @@ def write_output(rows, output_path, vendor_name=None):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Analyze KEV/EPSS-enriched CSV files by vendor and EPSS score."
+        description="Analyze KEV/EPSS-enriched CSV files by vendor and EPSS score.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog="""
+Examples:
+  python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9
+  python vendor_from_epss_csv.py kev_epss_result.csv --vendor Microsoft
+  python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9 --vendor Microsoft
+  python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9 -o output.csv
+
+Typical workflow:
+  1. Fetch KEV + EPSS:
+     python kev_epss_tool.py --xlsx
+
+  2. Analyze vendors:
+     python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9
+"""
     )
 
     parser.add_argument(
         "csv_file",
-        help="Input CSV file"
+        nargs="?",
+        help="Input CSV file (for example: kev_epss_result.csv)"
     )
 
     parser.add_argument(
         "--score",
         type=float,
         default=0.9,
-        help="EPSS score threshold. Example: 0.9"
+        help="Minimum EPSS score threshold. Default: 0.9"
     )
 
     parser.add_argument(
@@ -176,44 +192,35 @@ def main():
     parser.add_argument(
         "-o",
         "--output",
-        help="Output CSV file"
+        help="Export filtered result to CSV"
     )
 
     args = parser.parse_args()
 
+    # Show help when csv_file is missing
+    if not args.csv_file:
+        parser.print_help()
+        return
+
     csv_path = Path(args.csv_file)
 
     if not csv_path.exists():
-        raise FileNotFoundError(
-            f"CSV file not found: {csv_path}"
-        )
+        raise FileNotFoundError(f"CSV file not found: {csv_path}")
 
     rows = read_rows(csv_path, args.score)
 
     if not rows:
-        print(
-            f"No records found for EPSS Score >= {args.score}"
-        )
+        print(f"No records found for EPSS Score >= {args.score}")
         return
 
     if args.vendor:
-        print_vendor_details(
-            rows,
-            args.vendor,
-            args.score
-        )
+        print_vendor_details(rows, args.vendor, args.score)
     else:
-        print_summary(
-            rows,
-            args.score
-        )
+        print_summary(rows, args.score)
         print_vendor_ranking(rows)
 
     if args.output:
-        write_output(
-            rows,
-            Path(args.output),
-            args.vendor
-        )
+        write_output(rows, Path(args.output), args.vendor)
+
 if __name__ == "__main__":
     main()
