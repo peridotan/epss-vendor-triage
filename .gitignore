@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+
+.venv/
+venv/
+env/
+
+kev_epss_result.csv
+kev_epss_result.xlsx
+*.xlsx
+
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
