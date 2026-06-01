@@ -1,0 +1,3 @@
+display_name: EPSS Vendor Triage
+short_description: Run KEV + EPSS vendor triage and create defensive vulnerability reports.
+default_prompt: Use the epss-vendor-triage repository to generate KEV + EPSS outputs, rank vendors, and summarize defensive vulnerability prioritization results.

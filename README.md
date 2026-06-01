@@ -80,8 +80,47 @@ epss-vendor-triage/
 ├── LICENSE
 ├── requirements.txt
 ├── .gitignore
+├── codex-skills/
+│   └── epss-vendor-triage/
+│       └── SKILL.md
 └── samples/
     └── sample_kev_epss.csv
+```
+
+---
+
+## Codex Skill
+
+This repository includes a Codex Skill for operating and explaining the EPSS
+Vendor Triage workflow consistently.
+
+Purpose:
+
+- Guide Codex when generating KEV + EPSS outputs
+- Support vendor concentration review and patch prioritization
+- Keep reporting defensive, practical, and customer-safe
+
+Placement:
+
+```text
+codex-skills/epss-vendor-triage/
+```
+
+Example usage with Codex:
+
+```text
+Use the epss-vendor-triage skill to generate the default KEV + EPSS dataset.
+```
+
+```text
+Use the epss-vendor-triage skill to rank vendors from kev_epss_result.csv with EPSS score >= 0.9.
+```
+
+Typical commands referenced by the skill:
+
+```bash
+python kev_epss_tool.py --xlsx
+python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9
 ```
 
 ---
