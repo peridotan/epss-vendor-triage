@@ -120,6 +120,37 @@ python kev_epss_tool.py
 python vendor_from_epss_csv.py
 ```
 
+You can also use `--help`.
+
+```bash
+python kev_epss_tool.py --help
+python vendor_from_epss_csv.py --help
+```
+
+### Shell notes
+
+Examples in this README are written for Git Bash and other Bash-compatible shells.
+On Windows PowerShell, run the same command on one line, or use PowerShell's backtick
+line continuation instead of `\`.
+
+Git Bash / Bash:
+
+```bash
+python kev_epss_tool.py \
+  --epss-threshold 0.7 \
+  --percentile-threshold 0.99 \
+  --xlsx
+```
+
+PowerShell:
+
+```powershell
+python kev_epss_tool.py `
+  --epss-threshold 0.7 `
+  --percentile-threshold 0.99 `
+  --xlsx
+```
+
 ---
 
 ## 1) Fetch KEV + EPSS data
@@ -134,6 +165,10 @@ Output:
 
 - `kev_epss_result.csv`
 - `kev_epss_result.xlsx`
+
+By default, `kev_epss_tool.py` uses `kev_epss_result.csv` as the CSV output path.
+When `--xlsx` is specified, the XLSX file is written next to the CSV output with
+the `.xlsx` extension.
 
 ---
 
@@ -160,6 +195,56 @@ python kev_epss_tool.py \
   --epss-threshold 0.7 \
   --percentile-threshold 0.99 \
   --xlsx
+```
+
+Defaults:
+
+- `--epss-threshold` defaults to `0.0`
+- `--percentile-threshold` defaults to `0.0`
+
+This means that, unless thresholds are specified, the output includes KEV entries
+regardless of EPSS score or percentile.
+
+---
+
+### Custom output path
+
+Use `--output` or `-o` to choose the CSV output path.
+
+```bash
+python kev_epss_tool.py -o kev_epss_result_20260601.csv --xlsx
+```
+
+This writes:
+
+- `kev_epss_result_20260601.csv`
+- `kev_epss_result_20260601.xlsx`
+
+If you write to a subdirectory, create the directory first. The tool does not
+create missing output directories.
+
+Git Bash / Bash:
+
+```bash
+mkdir -p output
+python kev_epss_tool.py -o output/kev_epss_result.csv --xlsx
+```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force output
+python kev_epss_tool.py -o output/kev_epss_result.csv --xlsx
+```
+
+---
+
+### Request timeout
+
+Use `--timeout` when network access to CISA KEV or FIRST EPSS is slow.
+
+```bash
+python kev_epss_tool.py --timeout 60 --xlsx
 ```
 
 ---
@@ -231,6 +316,8 @@ Analyze vendors by EPSS score threshold.
 python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9
 ```
 
+`--score` defaults to `0.9` when it is omitted.
+
 Example output:
 
 ```text
@@ -258,6 +345,12 @@ python vendor_from_epss_csv.py \
   --vendor Microsoft
 ```
 
+Quote vendor names that contain spaces.
+
+```bash
+python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9 --vendor "Pulse Secure"
+```
+
 Displays:
 
 - CVE
@@ -279,6 +372,32 @@ python vendor_from_epss_csv.py \
   --vendor Microsoft \
   -o microsoft_cves.csv
 ```
+
+You can also export all rows that match the EPSS score threshold without limiting
+the output to one vendor.
+
+```bash
+python vendor_from_epss_csv.py kev_epss_result.csv --score 0.9 -o high_epss_cves.csv
+```
+
+---
+
+## Input CSV requirements
+
+`vendor_from_epss_csv.py` can analyze the CSV produced by `kev_epss_tool.py` and
+CSV files with compatible column names.
+
+Minimum required data:
+
+- Vendor column, such as `vendor`, `vendorProject`, `Vendor`, or `ベンダー`
+- EPSS score column, such as `epss_score`, `epss`, `score`, `EPSS`, or `EPSS Score`
+
+Optional columns improve drill-down output:
+
+- CVE column, such as `cve`, `cveID`, `CVE`, or `CVE ID`
+- Product column, such as `product`, `Product`, or `製品`
+- EPSS percentile column, such as `epss_percentile`, `percentile`, or `EPSS Percentile`
+- Description column, such as `description`, `summary`, `shortDescription`, `cveDescription`, or `Description`
 
 ---
 
@@ -319,6 +438,17 @@ It does **not** perform:
 - Penetration testing
 - Unauthorized access
 - Offensive operations
+
+---
+
+## Interpretation Notes
+
+EPSS estimates the likelihood of exploitation activity. It is not a complete
+risk score and does not include business impact, asset exposure, compensating
+controls, or operational criticality.
+
+Use KEV and EPSS as prioritization signals, then confirm whether the affected
+product is actually present, exposed, and unpatched in your environment.
 
 ---
 
