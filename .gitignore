@@ -13,3 +13,8 @@ kev_epss_result.xlsx
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Generated output files
+kev_epss_result*
+output*.csv
+output*.xlsx
